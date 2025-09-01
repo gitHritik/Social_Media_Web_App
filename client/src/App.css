@@ -1,0 +1,7 @@
+@layer utilities {
+  /* For WebKit browsers (Chrome, Safari, Edge, Opera) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+}
