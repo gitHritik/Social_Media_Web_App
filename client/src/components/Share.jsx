@@ -3,15 +3,45 @@ import Map from "../assets/map.png";
 import Friend from "../assets/friend.png";
 import { useContext, useState } from "react";
 import { AuthContext } from "../context/authContext";
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { makeRequest } from './../axios.js';
 
 const Share = () => {
     const { currentUser } = useContext(AuthContext);
     const [file, setFile] = useState(null);
-    const [text, setText] = useState("");
+    const [desc, setDesc] = useState("");
 
-    const handleShare = () => {
-        console.log("Post:", { text, file });
-        setText("");
+    const queryClient = useQueryClient();
+
+    //file upload end point
+    const uploadFile = async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        try {
+            const response = await makeRequest().post("/upload", formData)
+            return response.data;
+        } catch (error) {
+            console.error("Error uploading file:", error);
+            throw error;
+        }
+    };
+
+    const mutation = useMutation({
+        mutationFn: (newPost) => {
+            return makeRequest().post("/posts", newPost);
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries("[posts]");
+        },
+    });
+
+    const handleShare = async (e) => {
+        // console.log("It is running handleShare");
+        e.preventDefault();
+        let imgUrl = "";
+        if (file) imgUrl = await uploadFile(file);
+        mutation.mutate({ desc, img: imgUrl });
+        setDesc("");
         setFile(null);
     };
 
@@ -28,8 +58,8 @@ const Share = () => {
                     <input
                         type="text"
                         placeholder={`What's on your mind ${currentUser.name}?`}
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
+                        value={desc}
+                        onChange={(e) => setDesc(e.target.value)}
                         className="w-3/5 bg-transparent border-none outline-none py-5 px-2 text-gray-900 dark:text-gray-100 placeholder-gray-500"
                     />
                 </div>

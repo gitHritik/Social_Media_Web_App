@@ -7,6 +7,7 @@ import likeRoutes from "./routes/likes.js"
 const app = express()
 import cookieParser from "cookie-parser"
 import cors from "cors"
+import { upload } from './routes/upload.js';
 
 
 //middlewares
@@ -24,12 +25,17 @@ app.use(cookieParser())
 
 
 
+app.post("/api/upload", upload.single("file"), (req, res) => {
+    const file = req.file;
+    res.status(200).json(file.filename);
+});
+
 //routes middlewares
 app.use("/auth/api", authRoutes);
-app.use("/post/api", postRoutes);
-app.use("/like/api", likeRoutes);
-app.use("/comment/api", commentRoutes);
-app.use("/users/api", userRoutes);
+app.use("/api/posts", postRoutes);
+app.use("/api/like", likeRoutes);
+app.use("/api/comment", commentRoutes);
+app.use("/api/users", userRoutes);
 
 
 

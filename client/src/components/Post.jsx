@@ -43,7 +43,7 @@ const Post = ({ post }) => {
                 <p>{post.desc}</p>
                 {post.img && (
                     <img
-                        src={post.img}
+                        src={"./uploads/" + post.img}
                         alt=""
                         className="w-full max-h-[500px] object-cover mt-5 rounded-lg"
                     />
