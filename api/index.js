@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.js"
 import postRoutes from "./routes/posts.js"
 import commentRoutes from "./routes/comments.js"
 import likeRoutes from "./routes/likes.js"
+import relationshipRoutes from "./routes/relationships.js"
 const app = express()
 import cookieParser from "cookie-parser"
 import cors from "cors"
@@ -36,11 +37,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/like", likeRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/users", userRoutes);
-
-
-
-
-
+app.use("/api/relationships", relationshipRoutes);
 
 
 //server listener

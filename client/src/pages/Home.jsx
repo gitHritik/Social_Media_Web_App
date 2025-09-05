@@ -5,7 +5,7 @@ import Share from './../components/Share';
 
 function Home() {
   return (
-    <div className="bg-[#f6f3f3] dark:text-white dark:bg-[#333] px-[40px] py-[20px]">
+    <div className="bg-[#f6f3f3] dark:text-white dark:bg-[#333] px-[40px] py-[20px] min-h-[100%]">
       <Stories />
       <Share />
       <Posts />

@@ -1,35 +1,46 @@
 import { useContext } from "react";
 import { AuthContext } from "../context/authContext";
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { makeRequest } from './../axios';
+import { useState } from "react";
 
-const Comments = () => {
+
+const Comments = ({ postId }) => {
     const { currentUser } = useContext(AuthContext);
+    const [desc, setDesc] = useState("");
+    const queryClient = useQueryClient();
 
-    // Temporary data
-    const comments = [
-        {
-            id: 1,
-            desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem neque aspernatur ullam aperiam. Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem neque aspernatur ullam aperiam",
-            name: "Loream 1",
-            userId: 1,
-            profilePicture:
-                "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    const { isPending, data } = useQuery({
+        queryKey: ['comment'],
+        queryFn: () =>
+            makeRequest().get(`/comment?postId=${postId}`).then((res) => {
+                return res.data;
+            }),
+    });
+
+    const mutation = useMutation({
+        mutationFn: (newComment) => {
+            return makeRequest().post("/comment", newComment);
         },
-        {
-            id: 2,
-            desc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Autem neque aspernatur ullam aperiam",
-            name: "Loream 2",
-            userId: 2,
-            profilePicture:
-                "https://images.pexels.com/photos/1036623/pexels-photo-1036623.jpeg?auto=compress&cs=tinysrgb&w=1600",
+        onSuccess: () => {
+            queryClient.invalidateQueries("[comment]");
         },
-    ];
+    });
+
+    const handleShare = async (e) => {
+        // console.log("It is running handleShare");
+        e.preventDefault();
+        mutation.mutate({ desc, postId });
+        setDesc("");
+
+    };
 
     return (
         <div className="mt-4">
             {/* Write Comment */}
             <div className="flex items-center justify-between gap-5 my-5">
                 <img
-                    src={currentUser.profilePic}
+                    src={`/uploads/${currentUser.profilePic}`}
                     alt={currentUser.name}
                     className="w-10 h-10 rounded-full object-cover"
                 />
@@ -37,20 +48,21 @@ const Comments = () => {
                     type="text"
                     placeholder="Write a comment"
                     className="flex-1 px-3 py-2 border border-gray-300 dark:border-gray-700 bg-transparent text-gray-900 dark:text-gray-100 rounded-md outline-none"
+                    onChange={(e) => setDesc(e.target.value)}
                 />
-                <button className="bg-blue-600 text-white px-4 py-2 rounded-md cursor-pointer">
+                <button className="bg-blue-600 text-white px-4 py-2 rounded-md cursor-pointer" onClick={handleShare}>
                     Send
                 </button>
             </div>
 
             {/* Render Comments */}
-            {comments.map((comment) => (
+            {isPending ? "loading..." : data.map((comment) => (
                 <div
                     key={comment.id}
                     className="flex justify-between gap-5 my-6"
                 >
                     <img
-                        src={comment.profilePicture}
+                        src={"/uploads/" + comment.profilePic}
                         alt={comment.name}
                         className="w-10 h-10 rounded-full object-cover"
                     />

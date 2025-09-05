@@ -12,7 +12,9 @@ import { Navigate } from "react-router-dom";
 import { useContext } from 'react';
 import { DarkModeContext } from "./context/darkModeContext";
 import { AuthContext } from './context/authContext';
+import ScrollToTop from './ScrollToTop';
 import {
+
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
@@ -22,18 +24,21 @@ const Layout = () => {
   const queryClient = new QueryClient()
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <div>
-        <Navbar />
-        <div className="flex">
-          <LeftBar />
-          <div className="flex-6">
-            <Outlet />
+    <>
+      <ScrollToTop />
+      <QueryClientProvider client={queryClient}>
+        <div>
+          <Navbar />
+          <div className="flex">
+            <LeftBar />
+            <div className="flex-6">
+              <Outlet />
+            </div>
+            <RightBar />
           </div>
-          <RightBar />
         </div>
-      </div>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </>
   );
 };
 

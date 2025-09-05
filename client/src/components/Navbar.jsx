@@ -15,6 +15,7 @@ const Navbar = () => {
   const { darkMode, toggleTheme } = useContext(DarkModeContext);
   const { currentUser } = useContext(AuthContext);
 
+
   return (
     <div className="w-full h-16 flex items-center justify-between px-4 shadow-md bg-white dark:bg-gray-900 sticky top-0 z-50">
       {/* Left */}

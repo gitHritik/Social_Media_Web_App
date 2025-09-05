@@ -19,7 +19,7 @@ const Register = () => {
     // Handle registration logic here
     try {
       const res = await axios.post("http://localhost:8800/auth/api/register", inputs);
-      console.log(res)
+
     } catch (error) {
       setErrors(error);
     }

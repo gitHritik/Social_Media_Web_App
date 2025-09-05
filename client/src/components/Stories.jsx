@@ -33,7 +33,7 @@ const Stories = () => {
             {/* Current User Story */}
             <div className="relative min-w-[120px] sm:min-w-[150px] md:min-w-0 flex-1 overflow-hidden rounded-[10px]">
                 <img
-                    src={currentUser.profilePic}
+                    src={`/uploads/${currentUser.profilePic}`}
                     alt={currentUser.name}
                     className="w-full h-full object-cover"
                 />
